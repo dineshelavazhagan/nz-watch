@@ -87,7 +87,7 @@ const DEAL_PAGES = {
   'GO deals': 'https://www.gorentals.co.nz/deals/',
   'Ezi specials': 'https://www.ezicarrental.co.nz/specials',
   'Snap deals': 'https://www.snaprentals.co.nz/deals',
-  'Apex specials': 'https://www.apexrentals.co.nz/specials',
+  'Apex deals': 'https://www.apexrentals.co.nz/deals',
 };
 async function dealLines(page, url) {
   const resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -168,6 +168,24 @@ async function milford(page) {
   return { '19–20 Nov': await run('19 Nov 2026', '20 Nov 2026'), '20–21 Nov': await run('20 Nov 2026', '21 Nov 2026') };
 }
 
+// Backup source for Milford Sound Lodge: its Booking.com page, one night at a time
+async function milfordBooking(page) {
+  const out = {};
+  for (const [label, ci, co] of [['19–20 Nov', '2026-11-19', '2026-11-20'], ['20–21 Nov', '2026-11-20', '2026-11-21']]) {
+    await page.goto(`https://www.booking.com/hotel/nz/milford-sound-lodge.en-gb.html?checkin=${ci}&checkout=${co}&group_adults=2&no_rooms=1&selected_currency=NZD`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.waitForTimeout(5000);
+    out[label] = await page.evaluate(() => {
+      const t = document.body.innerText;
+      if (/no availability here|not available on our site for your dates/i.test(t) && !/Select rooms/i.test(t)) return 'none';
+      const rooms = [...new Set([...document.querySelectorAll('.hprt-roomtype-icon-link,[data-testid=room-name],.hprt-roomtype-link')].map(e => e.textContent.trim()).filter(Boolean))];
+      const price = (t.match(/NZD\s?[\d,]+/) || [''])[0];
+      return rooms.length ? rooms.slice(0, 4).join(', ') + (price ? ' from ' + price : '') : 'UNKNOWN: ' + document.title.slice(0, 60);
+    });
+  }
+  if (Object.values(out).every(v => v.startsWith('UNKNOWN'))) throw new Error('Booking.com page not readable');
+  return out;
+}
+
 // ---------- MAIN ----------
 (async () => {
   if (MODE === 'test') { await notify('NZ watch test', 'If you can read this, alerts work.', 'high', 'white_check_mark'); log('test sent'); return; }
@@ -229,7 +247,14 @@ async function milford(page) {
     const hits = Object.entries(m).flatMap(([n, rs]) => rs.filter(x => !/: none$/.test(x)).map(x => `${n}: ${x}`));
     summary.push(hits.length ? 'Milford OPEN' : 'Milford full');
     if (hits.length) alerts.push(`Milford Sound Lodge has a chalet:\n- ${hits.join('\n- ')}\nBook at https://milfordlodge.com/book/ then cancel that night at Fiordland Hotel (Agoda, free until 18 Nov).`);
-  } else summary.push(`Milford failed (${m.err.slice(0,160)})`);
+  } else {
+    const mb = await safe('Milford (Booking.com)', () => milfordBooking(page));
+    if (!mb.failed) {
+      const hits = Object.entries(mb).filter(([, v]) => v !== 'none' && !v.startsWith('UNKNOWN')).map(([n, v]) => `${n}: ${v}`);
+      summary.push(hits.length ? 'Milford OPEN (Booking.com)' : 'Milford full (via Booking.com)');
+      if (hits.length) alerts.push(`Milford Sound Lodge available on Booking.com:\n- ${hits.join('\n- ')}\nhttps://www.booking.com/hotel/nz/milford-sound-lodge.en-gb.html — then cancel that night at Fiordland Hotel (Agoda, free until 18 Nov).`);
+    } else summary.push(`Milford failed on both lodge site (bot check) and Booking.com (${mb.err.slice(0,80)})`);
+  }
 
   await browser.close();
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));
