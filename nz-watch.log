@@ -1,2 +1,5 @@
 [2026-10-12T16:35:53.458Z] Milford failed: page.waitForSelector: Timeout 40000ms exceeded.
 [2026-10-12T16:35:53.575Z] all | Omega GX $148.36/d (≈$1959) · Omega NI ≈$382 · GO ≈$1390 · GO NI ≈$665 · Hermitage no Premium Plus · Milford failed | 1 alert(s)
+[2026-10-12T16:39:35.534Z] Apex specials failed: HTTP 404
+[2026-10-12T16:41:07.585Z] Milford failed: booking widget did not load: Book Online | Milford Sound Accommodation :: MENU BOOK NOW MENU Book your stay CONNECTING TO BOOKING PLATFORM SETTING UP SECURE CONNECTION VERIFIED Verification failed to load. Please refresh the page. Stay Dine FAQ Contact Us Natural Hazards St
+[2026-10-12T16:41:07.701Z] all | Omega GX $148.36/d (≈$1959) · Omega NI ≈$382 · GO ≈$1390 · GO NI ≈$665 · Apex specials failed (HTTP 404) · Hermitage no Premium Plus · Milford failed (booking widget did not load: Book Online | Milford Sound Accommodation :: MENU BOOK NOW MENU Book your stay CONNECTING TO BOOKING PLATFORM SETTING UP SECURE CON) | 1 alert(s)

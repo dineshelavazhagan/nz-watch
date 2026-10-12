@@ -3,9 +3,9 @@
   "Omega deals": [
    "New Zealand Car Hire Deals",
    "SPECIAL DEALS FOR OUR BUSINESS TRAVELLERS",
-   "SUPER DEAL FOR OUR SENIORS \u2013 SAVE 10%",
+   "SUPER DEAL FOR OUR SENIORS – SAVE 10%",
    "Omega's Relocation Specials - Travel New Zealand for only $1/Day",
-   "So, if you\u2019re looking for a one-way car rental, we have great news! You can rent a car for $1/day and save!",
+   "So, if you’re looking for a one-way car rental, we have great news! You can rent a car for $1/day and save!",
    "Call our reservations team during office hours on 0800 52 52 10, and we'll confirm availability over the phone or email us at rent-car@omegarentals.com"
   ],
   "GO deals": [
@@ -16,7 +16,7 @@
    "Travel from 10 Oct 2026 to 5 Nov 2026",
    "Want to get alerts for some of the cheapest deals for your next rental car?",
    "The best part? No matter how cheap your deal is, you still get the same award-winning customer service and perks with your rental.",
-   "Can\u2019t find the right relocation deal for your dream road trip? Check out our one-way rentals for more information on travelling New Zealand without compromise.",
+   "Can’t find the right relocation deal for your dream road trip? Check out our one-way rentals for more information on travelling New Zealand without compromise.",
    "Rev Up with Partner Deals | AA Car Rental Discount",
    "AA Member 15% Discount",
    "Save on your hire with our 15% discount for AA Members.",
@@ -38,8 +38,38 @@
    "*can't be used in conjunction with any other offer",
    "More simply better deals will be on their way soon!",
    "Deals are added to this page frequently, so be sure to check this page often to get the most bang for your buck.",
-   "\u200b100% Refundable bookings*",
+   "​100% Refundable bookings*",
    "GET 10% OFF CAR RENTAL"
+  ],
+  "Transfercar": [
+   "Christchurch Airport (13 Oct) → Pokeno (31 Oct)",
+   "Christchurch Airport (13 Oct) → Greymouth (18 Oct)",
+   "Christchurch Airport (13 Oct) → Picton (18 Oct)",
+   "Christchurch Airport (13 Oct) → Auckland Airport (24 Nov)",
+   "Christchurch Airport (13 Oct) → Auckland Airport (22 Oct)",
+   "Auckland Airport (13 Oct) → Queenstown Airport (03 Nov)",
+   "Palmerston North (13 Oct) → Christchurch Airport (15 Oct)",
+   "Christchurch Airport (13 Oct) → Picton (31 Oct)"
+  ],
+  "Imoova": [
+   "Christchurch → Auckland (13 Oct – 20 Oct, 6 days)",
+   "Christchurch → Auckland (13 Oct – 19 Oct, 6 nights)",
+   "Christchurch → Nelson (13 Oct – 29 Oct, 1 x 24hr)",
+   "Christchurch → Auckland (22 Nov – 13 Dec, 4 + 3 days)",
+   "Christchurch → Auckland (20 Nov – 1 Dec, 4 + 4 x 24hrs)",
+   "Christchurch → Auckland (13 Oct – 20 Oct, 4 + 3 days)",
+   "Christchurch → Auckland (28 Oct – 13 Nov, 4 days)",
+   "Christchurch → Auckland (28 Oct – 14 Nov, 4 + 2 days)",
+   "Christchurch → Auckland (28 Oct – 14 Nov, 4 + 3 days)",
+   "Christchurch → Auckland (25 Nov – 13 Dec, 4 + 3 days)",
+   "Christchurch → Auckland (22 Nov – 13 Dec, 4 + 6 days)",
+   "Queenstown → Auckland (14 Oct – 27 Oct, 6 + 3 nights)",
+   "Queenstown → Auckland (26 Oct – 5 Nov, 6 + 7 days)",
+   "Queenstown → Christchurch (6 Nov – 8 Nov, 2 + 2 days)",
+   "Christchurch → Auckland (13 Oct – 11 Nov, 5 + 20 days)"
   ]
+ },
+ "lows": {
+  "goSI": 1390
  }
 }
