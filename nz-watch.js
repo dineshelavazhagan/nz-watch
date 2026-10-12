@@ -100,8 +100,11 @@ async function dealLines(page, url) {
   });
 }
 async function transfercar(page) {
+  try { return await transfercarOnce(page); } catch (e) { log('Transfercar retry:', e.message.slice(0, 60)); return await transfercarOnce(page); }
+}
+async function transfercarOnce(page) {
   await page.goto('https://www.transfercar.co.nz/search?page=1&limit=100&featured=0', { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.waitForFunction(() => /\nFrom \d/.test(document.body.innerText), null, { timeout: 30000 }).catch(() => {});
+  await page.waitForFunction(() => /\nFrom \d/.test(document.body.innerText), null, { timeout: 45000 }).catch(() => {});
   await page.waitForTimeout(2000);
   const n = await page.evaluate(() => (document.body.innerText.match(/\nFrom \d/g) || []).length);
   if (!n) throw new Error('no listings loaded: ' + (await snippet(page)));
