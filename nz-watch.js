@@ -29,6 +29,14 @@ async function notify(title, body, priority = 'default', tags = '') {
   } catch (e) { log('notify failed:', e.message); }
 }
 
+// Price alert only when it's below the threshold AND a new low vs what we already alerted on
+function newLow(key, price, threshold) {
+  state.lows = state.lows || {};
+  const prev = state.lows[key];
+  if (price > threshold) return false;
+  if (prev !== undefined && price >= prev - 10) return false;
+  state.lows[key] = price; return true;
+}
 // Returns only lines we have not seen before for this key (and remembers them).
 function newLines(key, lines) {
   const prev = new Set(state.seen[key] || []);
@@ -83,7 +91,7 @@ const DEAL_PAGES = {
 };
 async function dealLines(page, url) {
   const resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-  if (resp && resp.status() === 404) return [];
+  if (resp && resp.status() >= 400) throw new Error('HTTP ' + resp.status());
   await page.waitForTimeout(3500);
   return page.evaluate(() => {
     const R = document.querySelector('main') || document.body;
@@ -92,8 +100,11 @@ async function dealLines(page, url) {
   });
 }
 async function transfercar(page) {
-  await page.goto('https://www.transfercar.co.nz/search', { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.waitForTimeout(6000);
+  await page.goto('https://www.transfercar.co.nz/search?page=1&limit=100&featured=0', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.waitForFunction(() => /\nFrom \d/.test(document.body.innerText), null, { timeout: 30000 }).catch(() => {});
+  await page.waitForTimeout(2000);
+  const n = await page.evaluate(() => (document.body.innerText.match(/\nFrom \d/g) || []).length);
+  if (!n) throw new Error('no listings loaded: ' + (await snippet(page)));
   return page.evaluate(() => {
     const L = document.body.innerText.split('\n').map(s => s.trim()).filter(Boolean); const o = [];
     for (let i = 0; i < L.length - 3; i++) if (/^From \d/.test(L[i]) && /^To \d/.test(L[i + 2]) && /nelson|christchurch|auckland|queenstown/i.test(L[i + 1] + L[i + 3]))
@@ -103,12 +114,22 @@ async function transfercar(page) {
 }
 async function imoova(page) {
   await page.goto('https://www.imoova.com/deals/new-zealand', { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.waitForTimeout(5000);
-  return page.evaluate(() => [...new Set(document.body.innerText.split('\n').map(s => s.trim())
-    .filter(s => s.length < 100 && /→|to /i.test(s) && /nelson|christchurch|auckland|queenstown/i.test(s)))]);
+  await page.waitForFunction(() => /→/.test(document.body.innerText), null, { timeout: 30000 }).catch(() => {});
+  await page.waitForTimeout(2000);
+  const out = await page.evaluate(() => {
+    const L = document.body.innerText.split('\n').map(s => s.trim()).filter(Boolean); const o = [];
+    for (let i = 0; i < L.length - 5; i++) if (/^[A-Za-z .]+ → [A-Za-z .]+$/.test(L[i]) && /^\d{1,2} \w{3}$/.test(L[i + 2]) && L[i + 3] === '-')
+      o.push(`${L[i]} (${L[i + 2]} – ${L[i + 4]}, ${L[i + 5]})`);
+    return [...new Set(o)];
+  });
+  if (!out.length) throw new Error('no listings parsed: ' + (await snippet(page)));
+  return out;
 }
-// relocation is useful only if it fits our dates/routes
-const usefulReloc = s => /nov/i.test(s) && (/nelson.*(christchurch|queenstown)/i.test(s) || /auckland.*auckland/i.test(s) || /christchurch.*christchurch/i.test(s));
+// relocation is useful only if it fits our dates/routes: Nelson -> Christchurch/Queenstown around 17-19 Nov
+const usefulReloc = s => /nelson.{0,40}(→|\)).{0,20}(christchurch|queenstown)|nelson[^→]*→\s*(christchurch|queenstown)/i.test(s) && /nov/i.test(s);
+async function snippet(page) {
+  try { return (await page.title()) + ' :: ' + (await page.evaluate(() => document.body.innerText.replace(/\s+/g, ' ').slice(0, 200))); } catch (e) { return 'no page'; }
+}
 
 // ---------- HOTELS ----------
 async function hermitage(page) {
@@ -131,7 +152,8 @@ async function hermitage(page) {
 }
 async function milford(page) {
   await page.goto('https://milfordlodge.com/book/', { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.waitForSelector('#available_from', { timeout: 40000 });
+  try { await page.waitForSelector('#available_from', { timeout: 60000 }); }
+  catch (e) { throw new Error('booking widget did not load: ' + (await snippet(page))); }
   await page.waitForTimeout(3000);
   const run = (a, b) => page.evaluate(async ([a, b]) => {
     const q = s => document.querySelector(s), W = ms => new Promise(r => setTimeout(r, ms));
@@ -166,29 +188,29 @@ async function milford(page) {
       if (gx) {
         const pd = gx.p / 11;
         summary.push(`Omega GX $${pd.toFixed(2)}/d (≈$${allin(gx)})`);
-        if (pd < CONFIG.omegaBookedDaily - 0.01) alerts.push(`Omega Corolla Hatch GX dropped to NZ$${pd.toFixed(2)}/day (≈NZ$${allin(gx)} all-in, ${inr(allin(gx))}). Rebook on omegarentalcars.com, then cancel your old booking (free).`);
+        if (newLow('omegaGX', pd, CONFIG.omegaBookedDaily - 0.01)) alerts.push(`Omega Corolla Hatch GX dropped to NZ$${pd.toFixed(2)}/day (≈NZ$${allin(gx)} all-in, ${inr(allin(gx))}). Rebook on omegarentalcars.com, then cancel your old booking (free).`);
       }
-      if (best && allin(best) <= CONFIG.southBaseline - 100) alerts.push(`Omega ${best.n}: ≈NZ$${allin(best)} all-in (${inr(allin(best))}) — NZ$${CONFIG.southBaseline - allin(best)} cheaper than your booking.`);
-      const ni = om.ni[0]; if (ni) { const t = Math.round((ni.p + 100) * 1.0199); summary.push(`Omega NI ≈$${t}`); if (t <= CONFIG.northBaseline - 50) alerts.push(`Omega Auckland 13–17 Nov ${ni.n}: ≈NZ$${t} with Gold cover (+airport fees) vs NZ$${CONFIG.northBaseline}.`); }
+      if (best && newLow('omegaSI', allin(best), CONFIG.southBaseline - 100)) alerts.push(`Omega ${best.n}: ≈NZ$${allin(best)} all-in (${inr(allin(best))}) — NZ$${CONFIG.southBaseline - allin(best)} cheaper than your booking.`);
+      const ni = om.ni[0]; if (ni) { const t = Math.round((ni.p + 100) * 1.0199); summary.push(`Omega NI ≈$${t}`); if (newLow('omegaNI', t, CONFIG.northBaseline - 50)) alerts.push(`Omega Auckland 13–17 Nov ${ni.n}: ≈NZ$${t} with Gold cover (+airport fees) vs NZ$${CONFIG.northBaseline}.`); }
     } else summary.push('Omega failed');
 
     const go = await safe('GO', () => goRentals(page));
     if (!go.failed) {
-      const b = go.si[0]; if (b) { summary.push(`GO ≈$${b.allin}`); if (b.allin <= CONFIG.southBaseline - 100) alerts.push(`GO Rentals ${b.n}: ≈NZ$${b.allin} all-in incl. $0-excess + windscreen/tyres (${inr(b.allin)}) — NZ$${CONFIG.southBaseline - b.allin} cheaper. Note GO charges ~12% to cancel.${b.hot ? ' HOT DEAL.' : ''}`); }
-      const n = go.ni[0]; if (n) { summary.push(`GO NI ≈$${n.allin}`); if (n.allin <= CONFIG.northBaseline - 50) alerts.push(`GO Auckland 13–17 Nov ${n.n}: ≈NZ$${n.allin} all-in vs NZ$${CONFIG.northBaseline}.`); }
+      const b = go.si[0]; if (b) { summary.push(`GO ≈$${b.allin}`); if (newLow('goSI', b.allin, CONFIG.southBaseline - 100)) alerts.push(`GO Rentals ${b.n}: ≈NZ$${b.allin} all-in incl. $0-excess + windscreen/tyres (${inr(b.allin)}) — NZ$${CONFIG.southBaseline - b.allin} cheaper. Note GO charges ~12% to cancel.${b.hot ? ' HOT DEAL.' : ''}`); }
+      const n = go.ni[0]; if (n) { summary.push(`GO NI ≈$${n.allin}`); if (newLow('goNI', n.allin, CONFIG.northBaseline - 50)) alerts.push(`GO Auckland 13–17 Nov ${n.n}: ≈NZ$${n.allin} all-in vs NZ$${CONFIG.northBaseline}.`); }
     } else summary.push('GO failed');
 
     // Deals pages — alert on any NEW promo line
     for (const [name, url] of Object.entries(DEAL_PAGES)) {
       const lines = await safe(name, () => dealLines(page, url));
-      if (lines.failed) { summary.push(`${name} failed`); continue; }
+      if (lines.failed) { summary.push(`${name} failed (${lines.err.slice(0,80)})`); continue; }
       const fresh = newLines(name, lines);
       if (fresh.length) alerts.push(`NEW on ${name} (${url}):\n- ${fresh.slice(0, 4).join('\n- ')}`);
     }
     // Relocations
     for (const [name, fn] of [['Transfercar', transfercar], ['Imoova', imoova]]) {
       const r = await safe(name, () => fn(page));
-      if (r.failed) { summary.push(`${name} failed`); continue; }
+      if (r.failed) { summary.push(`${name} failed (${r.err.slice(0,120)})`); continue; }
       const fresh = newLines(name, r).filter(usefulReloc);
       if (fresh.length) alerts.push(`Relocation on ${name}:\n- ${fresh.slice(0, 4).join('\n- ')}`);
     }
@@ -207,7 +229,7 @@ async function milford(page) {
     const hits = Object.entries(m).flatMap(([n, rs]) => rs.filter(x => !/: none$/.test(x)).map(x => `${n}: ${x}`));
     summary.push(hits.length ? 'Milford OPEN' : 'Milford full');
     if (hits.length) alerts.push(`Milford Sound Lodge has a chalet:\n- ${hits.join('\n- ')}\nBook at https://milfordlodge.com/book/ then cancel that night at Fiordland Hotel (Agoda, free until 18 Nov).`);
-  } else summary.push('Milford failed');
+  } else summary.push(`Milford failed (${m.err.slice(0,160)})`);
 
   await browser.close();
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));
