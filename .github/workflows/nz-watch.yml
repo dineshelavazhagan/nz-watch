@@ -1,0 +1,43 @@
+name: NZ trip watch
+
+on:
+  schedule:
+    - cron: '20 3 * * *'    # 8:50am IST  -> full check (cars, deals, relocations, hotels)
+    - cron: '35 15 * * *'   # 9:05pm IST  -> hotels only
+  workflow_dispatch:         # lets you press "Run workflow" manually
+    inputs:
+      mode:
+        description: 'all / hotels / test'
+        default: 'all'
+
+permissions:
+  contents: write            # needed to save state.json (remembers deals already seen)
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - name: Run watch
+        env:
+          TZ: Asia/Kolkata
+        run: |
+          MODE="${{ github.event.inputs.mode }}"
+          if [ -z "$MODE" ]; then
+            if [ "${{ github.event.schedule }}" = "35 15 * * *" ]; then MODE=hotels; else MODE=all; fi
+          fi
+          node nz-watch.js "$MODE"
+      - name: Save state
+        if: always()
+        run: |
+          git config user.name "nz-watch-bot"
+          git config user.email "nz-watch-bot@users.noreply.github.com"
+          git add state.json nz-watch.log 2>/dev/null || true
+          git commit -m "watch state $(date -u +%F_%H%M)" || echo "no changes"
+          git push || echo "push skipped"

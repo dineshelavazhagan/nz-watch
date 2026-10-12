@@ -1,0 +1,27 @@
+RUN THE WATCH ONLINE WITH GITHUB ACTIONS (free, computer can be OFF, no Claude tokens)
+====================================================================================
+
+1. Create a free account at https://github.com (if you don't have one).
+2. Click "+" (top right) -> "New repository"
+     Name: nz-watch     Visibility: PRIVATE     -> Create repository
+3. On the new repo page click "uploading an existing file".
+   Drag in EVERYTHING from this folder, including the hidden ".github" folder
+   (on Windows: View -> Show -> Hidden items, so you can see ".github").
+   -> "Commit changes".
+   (Tip: if dragging the .github folder doesn't work, click "Add file" ->
+    "Create new file", type the name  .github/workflows/nz-watch.yml  and paste
+    the contents of that file.)
+4. Go to the repo's "Actions" tab -> if asked, click "I understand my workflows,
+   go ahead and enable them".
+5. Test: Actions -> "NZ trip watch" -> "Run workflow" -> mode: test -> Run.
+   Your phone (ntfy app, topic in config.json) should get a test alert.
+6. Then "Run workflow" again with mode: all to see a real check.
+   Click the run -> "watch" -> "Run watch" to read the results.
+
+After that it runs automatically at ~8:50am and ~9:05pm IST every day
+(GitHub can start scheduled runs 5-30 min late - that's normal).
+
+Free limits: a private repo gets 2,000 free minutes/month; this uses about
+5 min per run, ~300 min/month. Well within the free limit.
+
+To stop: Actions -> "NZ trip watch" -> "..." -> Disable workflow.
