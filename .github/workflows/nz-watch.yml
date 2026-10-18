@@ -3,7 +3,6 @@ name: NZ trip watch
 on:
   schedule:
     - cron: '20 3 * * *'    # 8:50am IST  -> full check (cars, deals, relocations, hotels)
-    - cron: '35 15 * * *'   # 9:05pm IST  -> hotels only
   workflow_dispatch:         # lets you press "Run workflow" manually
     inputs:
       mode:
