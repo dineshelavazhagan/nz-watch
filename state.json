@@ -111,7 +111,14 @@
    "Christchurch → Auckland (17 Oct – 20 Oct, 4 + 2 days)",
    "Christchurch → Nelson (18 Oct – 29 Oct, 1 x 24hr)",
    "Nelson → Christchurch (22 Oct – 13 Nov, 1 + 4 x 24hrs)",
-   "Christchurch → Auckland (18 Oct – 20 Oct, 4 + 1 days)"
+   "Christchurch → Auckland (18 Oct – 20 Oct, 4 + 1 days)",
+   "Christchurch → Nelson (19 Oct – 29 Oct, 1 x 24hr)",
+   "Auckland → Christchurch (19 Oct – 26 Oct, 6 + 3 nights)",
+   "Christchurch → Auckland (19 Oct – 20 Oct, 4 days)",
+   "Auckland → Queenstown (23 Oct – 29 Oct, 7 + 1 nights)",
+   "Auckland → Queenstown (23 Oct – 31 Oct, 7 + 3 nights)",
+   "Auckland → Queenstown (23 Oct – 1 Nov, 7 + 3 nights)",
+   "Christchurch → Auckland (19 Oct – 25 Oct, 6 + 3 nights)"
   ],
   "Apex deals": [
    "NEW ZEALAND CAR RENTAL DEALS AND RELOCATION RENTALS",
@@ -133,6 +140,7 @@
   ]
  },
  "lows": {
-  "goSI": 1390
+  "goSI": 1390,
+  "omegaNI": 368
  }
 }
