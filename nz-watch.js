@@ -30,6 +30,14 @@ async function notify(title, body, priority = 'default', tags = '') {
 }
 
 // Price alert only when it's below the threshold AND a new low vs what we already alerted on
+// alert only when the set of hits changes (so hourly runs don't repeat the same alert)
+function changed(key, hits) {
+  state.seenHits = state.seenHits || {};
+  const v = hits.slice().sort().join('|');
+  const was = state.seenHits[key] || '';
+  state.seenHits[key] = v;
+  return v !== '' && v !== was;
+}
 function newLow(key, price, threshold) {
   state.lows = state.lows || {};
   const prev = state.lows[key];
@@ -194,7 +202,7 @@ async function milfordBooking(page) {
   if (MODE === 'test') { await notify('NZ watch test', 'If you can read this, alerts work.', 'high', 'white_check_mark'); log('test sent'); return; }
   if (new Date() > new Date('2026-11-20T23:59:59+13:00')) { log('Trip watch period over — remove the scheduled task.'); return; }
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, ...(process.env.GITHUB_ACTIONS ? { channel: 'chrome' } : {}) });
   const ctx = await browser.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36', locale: 'en-NZ' });
   const page = await ctx.newPage();
   const alerts = [], summary = [];
@@ -229,7 +237,7 @@ async function milfordBooking(page) {
       if (fresh.length) alerts.push(`NEW on ${name} (${url}):\n- ${fresh.slice(0, 4).join('\n- ')}`);
     }
     // Relocations
-    for (const [name, fn] of [['Transfercar', transfercar], ['Imoova', imoova]]) {
+    for (const [name, fn] of [['Transfercar', transfercar], ['Imoova', imoova]].filter(([n]) => !(process.env.GITHUB_ACTIONS && n === 'Transfercar'))) {
       const r = await safe(name, () => fn(page));
       if (r.failed) { summary.push(`${name} failed (${r.err.slice(0,120)})`); continue; }
       const fresh = newLines(name, r).filter(usefulReloc);
@@ -242,28 +250,32 @@ async function milfordBooking(page) {
   if (!h.failed) {
     const hits = Object.entries(h).flatMap(([n, rs]) => rs.filter(x => /premium plus|suite/i.test(x)).map(x => `${n}: ${x}`));
     summary.push(hits.length ? 'Hermitage PREMIUM PLUS' : 'Hermitage no Premium Plus');
-    if (hits.length) alerts.push(`Hermitage upgrade available:\n- ${hits.join('\n- ')}\nEmail reservations@hermitage.co.nz quoting R23D18 (22 Nov) / R23731 (23 Nov).`);
+    if (changed('hermitage', hits)) alerts.push(`Hermitage upgrade available:\n- ${hits.join('\n- ')}\nEmail reservations@hermitage.co.nz quoting R23D18 (22 Nov) / R23731 (23 Nov).`);
   } else summary.push('Hermitage failed');
 
   const m = await safe('Milford', () => milford(page));
   if (!m.failed) {
     const hits = Object.entries(m).flatMap(([n, rs]) => rs.filter(x => !/: none$/.test(x)).map(x => `${n}: ${x}`));
     summary.push(hits.length ? 'Milford OPEN' : 'Milford full');
-    if (hits.length) alerts.push(`Milford Sound Lodge has a chalet:\n- ${hits.join('\n- ')}\nBook at https://milfordlodge.com/book/ then cancel that night at Fiordland Hotel (Agoda, free until 18 Nov).`);
+    if (changed('milford', hits)) alerts.push(`Milford Sound Lodge has a chalet:\n- ${hits.join('\n- ')}\nBook at https://milfordlodge.com/book/ then cancel that night at Fiordland Hotel (Agoda, free until 18 Nov).`);
   } else {
     const mb = await safe('Milford (Booking.com)', () => milfordBooking(page));
     if (!mb.failed) {
       const hits = Object.entries(mb).filter(([, v]) => v !== 'none' && !v.startsWith('UNKNOWN')).map(([n, v]) => `${n}: ${v}`);
       summary.push(hits.length ? 'Milford OPEN (Booking.com)' : 'Milford full (via Booking.com)');
-      if (hits.length) alerts.push(`Milford Sound Lodge available on Booking.com:\n- ${hits.join('\n- ')}\nhttps://www.booking.com/hotel/nz/milford-sound-lodge.en-gb.html — then cancel that night at Fiordland Hotel (Agoda, free until 18 Nov).`);
+      if (changed('milford', hits)) alerts.push(`Milford Sound Lodge available on Booking.com:\n- ${hits.join('\n- ')}\nhttps://www.booking.com/hotel/nz/milford-sound-lodge.en-gb.html — then cancel that night at Fiordland Hotel (Agoda, free until 18 Nov).`);
     } else summary.push(`Milford failed on both lodge site (bot check) and Booking.com (${mb.err.slice(0,80)})`);
   }
 
   await browser.close();
+  // one 'all quiet' summary per day (first run after 8am IST); alerts still go out any hour
+  const ist = new Date(Date.now() + 5.5 * 3600e3), day = ist.toISOString().slice(0, 10);
+  const sendSummary = CONFIG.dailySummary && ist.getUTCHours() >= 8 && state.lastSummaryDay !== day;
+  if (sendSummary && !alerts.length) state.lastSummaryDay = day;
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));
 
   const line = summary.join(' · ');
   log(MODE, '|', line, '|', alerts.length, 'alert(s)');
   if (alerts.length) await notify('NZ WATCH ALERT', alerts.join('\n\n'), 'high', 'rotating_light');
-  else if (CONFIG.dailySummary) await notify(`NZ watch (${MODE})`, line, 'low', 'white_check_mark');
+  else if (sendSummary) await notify(`NZ watch (${MODE})`, line, 'low', 'white_check_mark');
 })().catch(async e => { log('FATAL', e.message); await notify('NZ watch error', e.message.slice(0, 300), 'default', 'warning'); process.exit(1); });

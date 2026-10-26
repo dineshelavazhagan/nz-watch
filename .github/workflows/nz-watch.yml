@@ -2,7 +2,7 @@ name: NZ trip watch
 
 on:
   schedule:
-    - cron: '20 3 * * *'    # 8:50am IST  -> full check (cars, deals, relocations, hotels)
+    - cron: '7 * * * *'     # every hour -> full check (cars, deals, relocations, hotels)
   workflow_dispatch:         # lets you press "Run workflow" manually
     inputs:
       mode:
@@ -15,14 +15,13 @@ permissions:
 jobs:
   watch:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
       - run: npm install
-      - run: npx playwright install --with-deps chromium
       - name: Run watch
         env:
           TZ: Asia/Kolkata
