@@ -193,5 +193,10 @@
   "goSI": 1390,
   "omegaNI": 368,
   "omegaSI": 1345
- }
+ },
+ "seenHits": {
+  "hermitage": "",
+  "milford": ""
+ },
+ "lastSummaryDay": "2026-10-26"
 }
