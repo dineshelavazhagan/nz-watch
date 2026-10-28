@@ -189,8 +189,8 @@ async function milfordBooking(page) {
       const t = document.body.innerText;
       if (/no availability here|not available on our site for your dates/i.test(t)) return 'none';
       const rooms = [...new Set([...document.querySelectorAll('.hprt-roomtype-icon-link,[data-testid=room-name],.hprt-roomtype-link')].map(e => e.textContent.trim()).filter(Boolean))];
-      const price = (t.match(/NZD\s?[\d,]+/) || [''])[0];
-      if (rooms.length && !price) return 'none'; // room names without a price = listed but not bookable
+      const price = (t.match(/(NZD|NZ\$|US\$|\$|₹|Rs\.?)\s?[\d,]{2,}/) || [''])[0];
+      if (rooms.length && !price && /no availability here/i.test(t)) return 'none';
       return rooms.length ? rooms.slice(0, 4).join(', ') + ' from ' + price : 'UNKNOWN: ' + document.title.slice(0, 60);
     });
   }
