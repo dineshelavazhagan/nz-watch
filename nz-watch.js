@@ -20,13 +20,23 @@ const inr = nzd => '₹' + Math.round(nzd * INR).toLocaleString('en-IN');
 const log = (...a) => { const line = `[${new Date().toISOString()}] ${a.join(' ')}`; console.log(line); fs.appendFileSync(LOG_FILE, line + '\n'); };
 
 async function notify(title, body, priority = 'default', tags = '') {
-  if (!CONFIG.ntfyTopic || CONFIG.ntfyTopic.includes('CHANGE')) { log('ntfy topic not set — skipping notification'); return; }
-  try {
-    await fetch(`https://ntfy.sh/${encodeURIComponent(CONFIG.ntfyTopic)}`, {
-      method: 'POST', body,
-      headers: { Title: title.replace(/[^\x20-\x7E]/g, ''), Priority: priority, Tags: tags, ...(CONFIG.alertEmail && priority === 'high' ? { Email: CONFIG.alertEmail } : {}) },
-    });
-  } catch (e) { log('notify failed:', e.message); }
+  const t = title.replace(/[^\x20-\x7E]/g, '').trim();
+  const urgent = priority === 'high';
+  const jobs = [];
+  // 1) ntfy phone app
+  if (CONFIG.ntfyTopic) jobs.push(['ntfy', fetch(`https://ntfy.sh/${encodeURIComponent(CONFIG.ntfyTopic)}`, { method: 'POST', body, headers: { Title: t, Priority: priority, Tags: tags } })]);
+  // 2) Telegram (every message: alerts, daily summary, errors)
+  const tg = process.env.TELEGRAM_BOT_TOKEN, chat = process.env.TELEGRAM_CHAT_ID || CONFIG.telegramChatId;
+  if (tg && chat) jobs.push(['telegram', fetch(`https://api.telegram.org/bot${tg}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chat, text: `${urgent ? '🔔 ' : ''}${t}\n\n${body}`, disable_notification: !urgent && priority === 'low' }) })]);
+  // 3) WhatsApp via CallMeBot (alerts + errors only)
+  const wp = process.env.WHATSAPP_PHONE, wk = process.env.WHATSAPP_APIKEY;
+  if (wp && wk && priority !== 'low') jobs.push(['whatsapp', fetch(`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(wp)}&apikey=${encodeURIComponent(wk)}&text=${encodeURIComponent((t + '\n\n' + body).slice(0, 1500))}`)]);
+  // 4) Email via ntfy (alerts + errors only), one per address, on a separate topic so the app isn't spammed
+  if (priority !== 'low') for (const addr of CONFIG.alertEmails || []) jobs.push(['email ' + addr, fetch(`https://ntfy.sh/${encodeURIComponent(CONFIG.ntfyTopic + '-mail')}`, { method: 'POST', body, headers: { Title: t, Email: addr } })]);
+  for (const [name, p] of jobs) {
+    try { const r = await p; if (!r.ok) log(`notify ${name} HTTP ${r.status}:`, (await r.text()).slice(0, 120)); else log(`notify ${name} ok`); }
+    catch (e) { log(`notify ${name} failed:`, e.message); }
+  }
 }
 
 // Price alert only when it's below the threshold AND a new low vs what we already alerted on

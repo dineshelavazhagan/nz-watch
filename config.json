@@ -1,7 +1,13 @@
 {
-  "ntfyTopic": "nzwatch-dinesh-804c8616ff96",
-  "omegaBookedDaily": 107.35,
-  "southBaseline": 1499,
-  "northBaseline": 425,
-  "dailySummary": true
+ "ntfyTopic": "nzwatch-dinesh-804c8616ff96",
+ "omegaBookedDaily": 107.35,
+ "southBaseline": 1499,
+ "northBaseline": 425,
+ "dailySummary": true,
+ "alertEmails": [
+  "dineshd62@gmail.com",
+  "dineshelavazhagan@gmail.com",
+  "shivalidineshe@gmail.com"
+ ],
+ "telegramChatId": "1046444826"
 }
