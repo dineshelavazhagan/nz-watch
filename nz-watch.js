@@ -187,10 +187,11 @@ async function milfordBooking(page) {
     await page.waitForTimeout(5000);
     out[label] = await page.evaluate(() => {
       const t = document.body.innerText;
-      if (/no availability here|not available on our site for your dates/i.test(t) && !/Select rooms/i.test(t)) return 'none';
+      if (/no availability here|not available on our site for your dates/i.test(t)) return 'none';
       const rooms = [...new Set([...document.querySelectorAll('.hprt-roomtype-icon-link,[data-testid=room-name],.hprt-roomtype-link')].map(e => e.textContent.trim()).filter(Boolean))];
       const price = (t.match(/NZD\s?[\d,]+/) || [''])[0];
-      return rooms.length ? rooms.slice(0, 4).join(', ') + (price ? ' from ' + price : '') : 'UNKNOWN: ' + document.title.slice(0, 60);
+      if (rooms.length && !price) return 'none'; // room names without a price = listed but not bookable
+      return rooms.length ? rooms.slice(0, 4).join(', ') + ' from ' + price : 'UNKNOWN: ' + document.title.slice(0, 60);
     });
   }
   if (Object.values(out).every(v => v.startsWith('UNKNOWN'))) throw new Error('Booking.com page not readable');
