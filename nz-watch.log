@@ -115,3 +115,8 @@
 [2026-10-28T17:43:39.277Z] notify telegram ok
 [2026-10-28T17:43:39.981Z] notify email ok
 [2026-10-28T17:43:39.982Z] test sent
+[2026-10-28T18:07:59.699Z] notify ntfy ok
+[2026-10-28T18:08:00.139Z] notify telegram ok
+[2026-10-28T18:08:01.970Z] email accepted: dineshd62@gmail.com,dineshelavazhagan@gmail.com,shivalidineshe@gmail.com rejected:  250 2.0.0 OK  1793210881 a92af1059eb24-1a75c9fd2b4sm7404611c88.6 - gsmtp
+[2026-10-28T18:08:01.970Z] notify email ok
+[2026-10-28T18:08:01.970Z] test sent
