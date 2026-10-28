@@ -290,5 +290,5 @@ async function milfordBooking(page) {
   const line = summary.join(' · ');
   log(MODE, '|', line, '|', alerts.length, 'alert(s)');
   if (alerts.length) { await notify('NZ WATCH ALERT', alerts.join('\n\n'), 'high', 'rotating_light'); console.log('::error title=NZ WATCH ALERT::' + alerts.join(' || ').replace(/\n/g, ' ')); process.exitCode = 1; } // failing the run makes GitHub email you
-  else if (sendSummary) await notify(`NZ watch (${MODE})`, line, 'low', 'white_check_mark');
+  else await notify(`NZ watch (${MODE})`, line, 'low', 'white_check_mark');
 })().catch(async e => { log('FATAL', e.message); await notify('NZ watch error', e.message.slice(0, 300), 'default', 'warning'); process.exit(1); });
