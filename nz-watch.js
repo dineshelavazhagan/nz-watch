@@ -33,8 +33,8 @@ async function notify(title, body, priority = 'default', tags = '') {
   if (wp && wk && priority !== 'low') jobs.push(['whatsapp', fetch(`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(wp)}&apikey=${encodeURIComponent(wk)}&text=${encodeURIComponent((t + '\n\n' + body).slice(0, 1500))}`)]);
   // 4) Email via Gmail SMTP (alerts + errors only) — needs GMAIL_USER + GMAIL_APP_PASSWORD secrets
   const gu = process.env.GMAIL_USER, gp = process.env.GMAIL_APP_PASSWORD, to = CONFIG.alertEmails || [];
-  if (gu && gp && to.length && priority !== 'low') jobs.push(['email', require('nodemailer').createTransport({ service: 'gmail', auth: { user: gu, pass: gp.replace(/\s/g, '') } })
-    .sendMail({ from: `NZ trip watch <${gu}>`, to: to.join(','), subject: t, text: body }).then(() => ({ ok: true }))]);
+  if (gu && gp && to.length) jobs.push(['email', require('nodemailer').createTransport({ service: 'gmail', auth: { user: gu, pass: gp.replace(/\s/g, '') } })
+    .sendMail({ from: `NZ trip watch <${gu}>`, to: to.join(','), subject: t, text: body }).then(i => { log('email accepted:', (i.accepted || []).join(','), 'rejected:', (i.rejected || []).join(','), i.response || ''); return { ok: true }; })]);
   for (const [name, p] of jobs) {
     try { const r = await p; if (!r.ok) log(`notify ${name} HTTP ${r.status}:`, (await r.text()).slice(0, 120)); else log(`notify ${name} ok`); }
     catch (e) { log(`notify ${name} failed:`, e.message); }
