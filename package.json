@@ -4,5 +4,8 @@
   "private": true,
   "description": "NZ trip price & availability watcher (runs locally, no Claude tokens)",
   "main": "nz-watch.js",
-  "dependencies": { "playwright": "^1.48.0" }
+  "dependencies": {
+    "nodemailer": "^6.9.16",
+    "playwright": "^1.48.0"
+  }
 }

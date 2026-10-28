@@ -31,8 +31,10 @@ async function notify(title, body, priority = 'default', tags = '') {
   // 3) WhatsApp via CallMeBot (alerts + errors only)
   const wp = process.env.WHATSAPP_PHONE, wk = process.env.WHATSAPP_APIKEY;
   if (wp && wk && priority !== 'low') jobs.push(['whatsapp', fetch(`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(wp)}&apikey=${encodeURIComponent(wk)}&text=${encodeURIComponent((t + '\n\n' + body).slice(0, 1500))}`)]);
-  // 4) Email via ntfy (alerts + errors only), one per address, on a separate topic so the app isn't spammed
-  if (priority !== 'low') for (const addr of CONFIG.alertEmails || []) jobs.push(['email ' + addr, fetch(`https://ntfy.sh/${encodeURIComponent(CONFIG.ntfyTopic + '-mail')}`, { method: 'POST', body, headers: { Title: t, Email: addr } })]);
+  // 4) Email via Gmail SMTP (alerts + errors only) — needs GMAIL_USER + GMAIL_APP_PASSWORD secrets
+  const gu = process.env.GMAIL_USER, gp = process.env.GMAIL_APP_PASSWORD, to = CONFIG.alertEmails || [];
+  if (gu && gp && to.length && priority !== 'low') jobs.push(['email', require('nodemailer').createTransport({ service: 'gmail', auth: { user: gu, pass: gp.replace(/\s/g, '') } })
+    .sendMail({ from: `NZ trip watch <${gu}>`, to: to.join(','), subject: t, text: body }).then(() => ({ ok: true }))]);
   for (const [name, p] of jobs) {
     try { const r = await p; if (!r.ok) log(`notify ${name} HTTP ${r.status}:`, (await r.text()).slice(0, 120)); else log(`notify ${name} ok`); }
     catch (e) { log(`notify ${name} failed:`, e.message); }
