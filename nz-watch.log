@@ -105,3 +105,7 @@
 [2026-10-28T17:01:00.084Z] notify email dineshelavazhagan@gmail.com HTTP 400: {"code":40053,"http":400,"error":"invalid request: anonymous email sending is not allowed","link":"https://ntfy.sh/docs/
 [2026-10-28T17:01:00.085Z] notify email shivalidineshe@gmail.com HTTP 400: {"code":40053,"http":400,"error":"invalid request: anonymous email sending is not allowed","link":"https://ntfy.sh/docs/
 [2026-10-28T17:01:00.085Z] test sent
+[2026-10-28T17:29:11.407Z] notify ntfy ok
+[2026-10-28T17:29:15.801Z] notify telegram ok
+[2026-10-28T17:29:15.802Z] notify email ok
+[2026-10-28T17:29:15.802Z] test sent
