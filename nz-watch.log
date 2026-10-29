@@ -582,3 +582,9 @@
 [2026-10-29T00:37:46.991Z] notify telegram ok
 [2026-10-29T00:37:47.621Z] email accepted: dineshd62@gmail.com,dineshelavazhagan@gmail.com,shivalidineshe@gmail.com rejected:  250 2.0.0 OK  1793234267 6a1803df08f44-91c6e20ba4fsm67214076d6.14 - gsmtp
 [2026-10-29T00:37:47.622Z] notify email ok
+[2026-10-29T00:42:22.580Z] Milford failed: booking widget did not load: Book Online | Milford Sound Accommodation :: MENU BOOK NOW MENU Book your stay CONNECTING TO BOOKING PLATFORM SETTING UP SECURE CONNECTION VERIFIED Verification failed to load. Please refresh the page. Stay Dine FAQ Contact Us Natural Hazards St
+[2026-10-29T00:42:35.989Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
+[2026-10-29T00:42:36.133Z] notify ntfy ok
+[2026-10-29T00:42:36.540Z] notify telegram ok
+[2026-10-29T00:42:37.205Z] email accepted: dineshd62@gmail.com,dineshelavazhagan@gmail.com,shivalidineshe@gmail.com rejected:  250 2.0.0 OK  1793234557 6a1803df08f44-91c47c54cbdsm144975796d6.26 - gsmtp
+[2026-10-29T00:42:37.205Z] notify email ok
