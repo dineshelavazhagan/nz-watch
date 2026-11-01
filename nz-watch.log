@@ -3748,3 +3748,8 @@
 [2026-11-01T13:27:21.008Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
 [2026-11-01T13:27:21.223Z] notify ntfy ok
 [2026-11-01T13:27:21.518Z] notify telegram ok
+[2026-11-01T13:29:31.399Z] notify ntfy ok
+[2026-11-01T13:29:31.695Z] notify telegram ok
+[2026-11-01T13:29:34.389Z] email accepted: 3 rejected: 0
+[2026-11-01T13:29:34.389Z] notify email ok
+[2026-11-01T13:29:34.389Z] test sent
