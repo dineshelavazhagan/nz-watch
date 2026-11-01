@@ -26,15 +26,15 @@ async function notify(title, body, priority = 'default', tags = '') {
   // 1) ntfy phone app
   if (CONFIG.ntfyTopic) jobs.push(['ntfy', fetch(`https://ntfy.sh/${encodeURIComponent(CONFIG.ntfyTopic)}`, { method: 'POST', body, headers: { Title: t, Priority: priority, Tags: tags } })]);
   // 2) Telegram (every message: alerts, daily summary, errors)
-  const tg = process.env.TELEGRAM_BOT_TOKEN, chat = process.env.TELEGRAM_CHAT_ID || CONFIG.telegramChatId;
+  const tg = process.env.TELEGRAM_BOT_TOKEN, chat = process.env.TELEGRAM_CHAT_ID;
   if (tg && chat) jobs.push(['telegram', fetch(`https://api.telegram.org/bot${tg}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chat, text: `${urgent ? '🔔 ' : ''}${t}\n\n${body}`, disable_notification: !urgent && priority === 'low' }) })]);
   // 3) WhatsApp via CallMeBot (alerts + errors only)
   const wp = process.env.WHATSAPP_PHONE, wk = process.env.WHATSAPP_APIKEY;
   if (wp && wk && priority !== 'low') jobs.push(['whatsapp', fetch(`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(wp)}&apikey=${encodeURIComponent(wk)}&text=${encodeURIComponent((t + '\n\n' + body).slice(0, 1500))}`)]);
   // 4) Email via Gmail SMTP (alerts + errors only) — needs GMAIL_USER + GMAIL_APP_PASSWORD secrets
-  const gu = process.env.GMAIL_USER, gp = process.env.GMAIL_APP_PASSWORD, to = CONFIG.alertEmails || [];
+  const gu = process.env.GMAIL_USER, gp = process.env.GMAIL_APP_PASSWORD, to = (process.env.ALERT_EMAILS || '').split(',').map(x => x.trim()).filter(Boolean);
   if (gu && gp && to.length && priority === 'high') jobs.push(['email', require('nodemailer').createTransport({ service: 'gmail', auth: { user: gu, pass: gp.replace(/\s/g, '') } })
-    .sendMail({ from: `NZ trip watch <${gu}>`, to: to.join(','), subject: t, text: body }).then(i => { log('email accepted:', (i.accepted || []).join(','), 'rejected:', (i.rejected || []).join(','), i.response || ''); return { ok: true }; })]);
+    .sendMail({ from: `NZ trip watch <${gu}>`, to: to.join(','), subject: t, text: body }).then(i => { log('email accepted:', (i.accepted || []).length, 'rejected:', (i.rejected || []).length); return { ok: true }; })]);
   for (const [name, p] of jobs) {
     try { const r = await p; if (!r.ok) log(`notify ${name} HTTP ${r.status}:`, (await r.text()).slice(0, 120)); else log(`notify ${name} ok`); }
     catch (e) { log(`notify ${name} failed:`, e.message); }
@@ -263,7 +263,7 @@ async function milfordBooking(page) {
   if (!h.failed) {
     const hits = Object.entries(h).flatMap(([n, rs]) => rs.filter(x => /premium plus|suite/i.test(x)).map(x => `${n}: ${x}`));
     summary.push(hits.length ? 'Hermitage PREMIUM PLUS' : 'Hermitage no Premium Plus');
-    if (changed('hermitage', hits)) alerts.push(`Hermitage upgrade available:\n- ${hits.join('\n- ')}\nEmail reservations@hermitage.co.nz quoting R23D18 (22 Nov) / R23731 (23 Nov).`);
+    if (changed('hermitage', hits)) alerts.push(`Hermitage upgrade available:\n- ${hits.join('\n- ')}\nEmail reservations@hermitage.co.nz quoting your booking refs for 22/23 Nov.`);
   } else summary.push('Hermitage failed');
 
   const m = await safe('Milford', () => milford(page));
