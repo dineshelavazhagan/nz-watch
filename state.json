@@ -235,7 +235,18 @@
    "Christchurch → Auckland (1 Nov – 2 Nov, 4 + 1 days)",
    "Christchurch → Auckland (1 Nov – 14 Nov, 4 x 24hrs)",
    "Greymouth → Auckland (1 Nov – 9 Nov, 4 + 4 x 24hrs)",
-   "Queenstown → Auckland (1 Nov – 13 Nov, 6 x 24hrs)"
+   "Queenstown → Auckland (1 Nov – 13 Nov, 6 x 24hrs)",
+   "Christchurch → Nelson (2 Nov – 29 Nov, 2 x 24hrs)",
+   "Wellington → Auckland (2 Nov – 7 Nov, 3 x 24hrs)",
+   "Christchurch → Auckland (2 Nov – 11 Nov, 5 + 9 days)",
+   "Christchurch → Auckland (2 Nov – 7 Nov, 6 x 24hrs)",
+   "Christchurch → Auckland (2 Nov – 14 Nov, 4 x 24hrs)",
+   "Christchurch → Auckland (2 Nov – 8 Nov, 4 + 3 days)",
+   "Greymouth → Auckland (2 Nov – 9 Nov, 4 + 4 x 24hrs)",
+   "Christchurch → Auckland (3 Nov – 4 Nov, 4 + 1 days)",
+   "Christchurch → Auckland (2 Nov – 5 Nov, 4 + 3 days)",
+   "Queenstown → Auckland (2 Nov – 13 Nov, 6 x 24hrs)",
+   "Auckland → Queenstown (15 Nov – 3 Dec, 2 + 15 nights)"
   ],
   "Apex deals": [
    "NEW ZEALAND CAR RENTAL DEALS AND RELOCATION RENTALS",
@@ -259,7 +270,7 @@
  },
  "lows": {
   "goSI": 1390,
-  "omegaNI": 368,
+  "omegaNI": 351,
   "omegaSI": 1345
  },
  "seenHits": {
