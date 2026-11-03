@@ -6471,3 +6471,7 @@
 [2026-11-03T22:02:53.643Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
 [2026-11-03T22:02:53.901Z] notify ntfy ok
 [2026-11-03T22:02:54.326Z] notify telegram ok
+[2026-11-03T22:06:59.730Z] Milford failed: booking widget did not load:  :: Internal Server Error - Request ID: 01M6HQ568WT547S5Z7P6PMEECZ
+[2026-11-03T22:07:12.957Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
+[2026-11-03T22:07:13.039Z] notify ntfy ok
+[2026-11-03T22:07:13.461Z] notify telegram ok
