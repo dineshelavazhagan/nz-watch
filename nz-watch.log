@@ -7954,3 +7954,7 @@ Call log:
 [2026-11-05T05:42:12.117Z] hotels | Hermitage no Premium Plus · Milford failed on both lodge site (bot check) and Booking.com (page.evaluate: TypeError: Cannot read properties of null (reading 'innerText')) | 0 alert(s)
 [2026-11-05T05:42:12.398Z] notify ntfy ok
 [2026-11-05T05:42:12.772Z] notify telegram ok
+[2026-11-05T05:47:18.139Z] Milford failed: booking widget did not load: Book Online | Milford Sound Accommodation :: MENU BOOK NOW MENU Book your stay CONNECTING TO BOOKING PLATFORM SETTING UP SECURE CONNECTION VERIFIED Verification failed to load. Please refresh the page. Stay Dine FAQ Contact Us Natural Hazards St
+[2026-11-05T05:47:31.137Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
+[2026-11-05T05:47:31.362Z] notify ntfy ok
+[2026-11-05T05:47:31.954Z] notify telegram ok
