@@ -8956,3 +8956,7 @@ Call log:
 [2026-11-06T02:57:18.718Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
 [2026-11-06T02:57:19.225Z] notify ntfy ok
 [2026-11-06T02:57:19.488Z] notify telegram ok
+[2026-11-06T03:03:30.590Z] Milford failed: booking widget did not load: Inactivity Timeout :: Inactivity Timeout Description: Too much time has passed without sending any data for document.
+[2026-11-06T03:03:44.367Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
+[2026-11-06T03:03:44.595Z] notify ntfy ok
+[2026-11-06T03:03:45.064Z] notify telegram ok
