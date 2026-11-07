@@ -10782,3 +10782,7 @@ Call log:
 [2026-11-07T17:07:19.014Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
 [2026-11-07T17:07:19.310Z] notify ntfy ok
 [2026-11-07T17:07:19.822Z] notify telegram ok
+[2026-11-07T17:12:17.333Z] Milford failed: booking widget did not load: Book Online | Milford Sound Accommodation :: MENU BOOK NOW MENU Book your stay CONNECTING TO BOOKING PLATFORM SETTING UP SECURE CONNECTION VERIFIED Verification failed to load. Please refresh the page. Stay Dine FAQ Contact Us Natural Hazards St
+[2026-11-07T17:12:31.169Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
+[2026-11-07T17:12:31.421Z] notify ntfy ok
+[2026-11-07T17:12:31.820Z] notify telegram ok
