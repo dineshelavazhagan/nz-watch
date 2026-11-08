@@ -283,6 +283,17 @@ async function milfordBooking(page) {
   await browser.close();
   // one 'all quiet' summary per day (first run after 8am IST); alerts still go out any hour
   const ist = new Date(Date.now() + 5.5 * 3600e3), day = ist.toISOString().slice(0, 10);
+  // one-off trip reminders: sent once per day, first run after 9am IST (Telegram + email + ntfy)
+  const REM = {
+    '2026-11-09': 'Prepare the NZ Traveller Declaration (NZTD) for Dinesh AND Shivali: keep passports, flight SQ 281 (lands AKL 12 Nov 11:20pm) and first address Jetpark Hotel Auckland Airport ready. Free at nztd.govt.nz. You can submit it from 24 hr before your flight to NZ.',
+    '2026-11-10': 'Tomorrow you fly. Fill the NZTD for BOTH of you at nztd.govt.nz (free) — submit tonight or tomorrow before boarding. Declare ALL food (answer Yes). Also: last day to cancel Waitakere / Franz Josef / Snap for free (11:59pm NZ = 4:29pm IST).',
+    '2026-11-11': 'Flight day! Check both NZTDs are SUBMITTED (confirmation email from NZTD). Carry printed eVisas + passports. Declare all food on arrival.'
+  };
+  state.reminded = state.reminded || {};
+  if (REM[day] && ist.getUTCHours() >= 9 && !state.reminded[day]) {
+    await notify('NZ TRIP REMINDER', REM[day], 'high', 'alarm_clock');
+    state.reminded[day] = true;
+  }
   const sendSummary = CONFIG.dailySummary && ist.getUTCHours() >= 8 && state.lastSummaryDay !== day;
   if (sendSummary && !alerts.length) state.lastSummaryDay = day;
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));
