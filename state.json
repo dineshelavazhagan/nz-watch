@@ -303,5 +303,7 @@
   "milford": ""
  },
  "lastSummaryDay": "2026-11-09",
- "reminded": {}
+ "reminded": {
+  "2026-11-09": true
+ }
 }
