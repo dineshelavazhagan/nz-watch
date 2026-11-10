@@ -287,7 +287,7 @@ async function milfordBooking(page) {
   const REM = {
     '2026-11-09': 'Prepare the NZ Traveller Declaration (NZTD) for Dinesh AND Shivali: keep passports, flight SQ 281 (lands AKL 12 Nov 11:20pm) and first address Jetpark Hotel Auckland Airport ready. Free at nztd.govt.nz. You can submit it from 24 hr before your flight to NZ.',
     '2026-11-10': 'Tomorrow you fly. Fill the NZTD for BOTH of you at nztd.govt.nz (free) — submit tonight or tomorrow before boarding. Declare ALL food (answer Yes). Also: last day to cancel Waitakere / Franz Josef / Snap for free (11:59pm NZ = 4:29pm IST).',
-    '2026-11-11': 'Flight day! Check both NZTDs are SUBMITTED (confirmation email from NZTD). Carry printed eVisas + passports. Declare all food on arrival.'
+    '2026-11-11': 'FLIGHT DAY checklist:\n1) NZTD for BOTH of you at nztd.govt.nz (free) - submit now, declare all food.\n2) BUY NZ/AU TRAVEL ADAPTER (Croma/Reliance - check V-shaped flat pins AU/NZ/Type I + your Indian plug fits). Backup: Changi or Kmart 13 Nov.\n3) Passports + printed eVisas + both Indian driving licences.\n4) Niyo loaded, international + contactless ON, daily limit above Rs 85,000; credit card in a separate bag.\n5) Airtel international pack active on both phones.\n6) Offline road book HTML on both phones - test in airplane mode. Offline maps: Auckland, Coromandel, Waitomo.\n7) Bags max 23 kg each (Air NZ 17 Nov). Power bank in cabin bag. No apples or fresh food.\n8) Messages: Jetpark (arrive ~1am + shuttle), Pūponga host (heater), Te Anga (WiFi), Snap (move 17 Nov return to ~12:00).\n9) Travel insurance - buy before departure if you want it.'
   };
   state.reminded = state.reminded || {};
   if (REM[day] && ist.getUTCHours() >= 9 && !state.reminded[day]) {
