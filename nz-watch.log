@@ -13514,3 +13514,7 @@ Call log:
 [2026-11-10T02:00:27.002Z] all | Omega GX $141.18/d (≈$1879) · Omega NI ≈$350 · GO NI ≈$561 · Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
 [2026-11-10T02:00:27.260Z] notify ntfy ok
 [2026-11-10T02:00:27.730Z] notify telegram ok
+[2026-11-10T02:02:50.427Z] Milford failed: booking widget did not load: Book Online | Milford Sound Accommodation :: MENU BOOK NOW MENU Book your stay CONNECTING TO BOOKING PLATFORM SETTING UP SECURE CONNECTION VERIFIED Verification failed to load. Please refresh the page. Stay Dine FAQ Contact Us Natural Hazards St
+[2026-11-10T02:03:03.430Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
+[2026-11-10T02:03:03.602Z] notify ntfy ok
+[2026-11-10T02:03:04.026Z] notify telegram ok
