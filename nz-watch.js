@@ -213,7 +213,16 @@ async function milfordBooking(page) {
 // ---------- MAIN ----------
 (async () => {
   if (MODE === 'test') { await notify('NZ watch test', 'If you can read this, alerts work.', 'high', 'white_check_mark'); log('test sent'); return; }
-  if (new Date() > new Date('2026-11-20T23:59:59+13:00')) { log('Trip watch period over — remove the scheduled task.'); return; }
+  if (new Date() > new Date('2026-11-20T23:59:59+13:00')) {
+    // after the watch period: only the 21 Nov roaming reminder, once
+    const istD = new Date(Date.now() + 5.5 * 3600e3), dayD = istD.toISOString().slice(0, 10);
+    state.reminded = state.reminded || {};
+    if (dayD === '2026-11-21' && istD.getUTCHours() >= 3 && !state.reminded[dayD]) {
+      await notify('NZ TRIP REMINDER', "Wife's Airtel 10-day pack ends about now. On her phone turn OFF data roaming for the Airtel SIM (Settings > SIM > Airtel > Roaming) so it can't charge pay-per-use. Keep using the NZ eSIM for data and calls; the Airtel SIM still gets SMS/OTPs.", 'high', 'alarm_clock');
+      state.reminded[dayD] = true; fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));
+    }
+    log('Trip watch period over.'); return;
+  }
 
   const browser = await chromium.launch({ headless: true, ...(process.env.GITHUB_ACTIONS ? { channel: 'chrome' } : {}) });
   const ctx = await browser.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36', locale: 'en-NZ' });
