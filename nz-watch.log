@@ -17160,3 +17160,7 @@ Call log:
 [2026-11-13T06:07:20.425Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
 [2026-11-13T06:07:20.574Z] notify ntfy ok
 [2026-11-13T06:07:20.955Z] notify telegram ok
+[2026-11-13T06:12:21.138Z] Milford failed: booking widget did not load: Book Online | Milford Sound Accommodation :: MENU BOOK NOW MENU Book your stay CONNECTING TO BOOKING PLATFORM SETTING UP SECURE CONNECTION VERIFIED Verification failed to load. Please refresh the page. Stay Dine FAQ Contact Us Natural Hazards St
+[2026-11-13T06:12:34.857Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
+[2026-11-13T06:12:35.108Z] notify ntfy ok
+[2026-11-13T06:12:35.740Z] notify telegram ok
