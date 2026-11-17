@@ -22092,3 +22092,8 @@ Call log:
 [2026-11-17T13:02:58.949Z] hotels | Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
 [2026-11-17T13:02:59.024Z] notify ntfy ok
 [2026-11-17T13:02:59.639Z] notify telegram ok
+[2026-11-17T13:04:10.492Z] GO failed: page.evaluate: TypeError: Cannot read properties of undefined (reading 'filter')
+[2026-11-17T13:06:02.181Z] Milford failed: booking widget did not load: Book Online | Milford Sound Accommodation :: MENU BOOK NOW MENU Book your stay CONNECTING TO BOOKING PLATFORM SETTING UP SECURE CONNECTION VERIFIED Verification failed to load. Please refresh the page. Stay Dine FAQ Contact Us Natural Hazards St
+[2026-11-17T13:06:16.639Z] all | Omega GX $153.27/d (≈$2014) · GO failed · Hermitage no Premium Plus · Milford full (via Booking.com) | 0 alert(s)
+[2026-11-17T13:06:16.926Z] notify ntfy ok
+[2026-11-17T13:06:17.415Z] notify telegram ok
