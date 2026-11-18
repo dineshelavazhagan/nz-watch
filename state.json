@@ -36,7 +36,8 @@
    "Travel from 25 Oct 2026 to 5 Nov 2026",
    "GO All Over in a Car Rental Deal",
    "Car Rental Deals Auckland",
-   "Sorry, there are no Hot Deals available"
+   "Sorry, there are no Hot Deals available",
+   "Sale from 19 Nov 2026 to 30 Nov 2026"
   ],
   "Ezi specials": [
    "40% Off Mitsubishi Triton Club Cab Ute",
@@ -72,13 +73,6 @@
    "Christchurch Airport (18 Oct) → Auckland Airport (30 Oct)"
   ],
   "Imoova": [
-   "Christchurch → Auckland (25 Oct – 31 Oct, 5 + 4 days)",
-   "Christchurch → Auckland (16 Dec – 21 Dec, 4 + 4 days)",
-   "Christchurch → Auckland (23 Oct – 1 Nov, 3 + 4 nights)",
-   "Christchurch → Nelson (23 Oct – 29 Oct, 1 x 24hr)",
-   "Auckland → Christchurch (23 Oct – 26 Oct, 6 nights)",
-   "Queenstown → Auckland (23 Oct – 27 Oct, 6 nights)",
-   "Christchurch → Auckland (23 Oct – 25 Oct, 5 nights)",
    "Christchurch → Auckland (24 Oct – 1 Nov, 3 + 4 nights)",
    "Christchurch → Nelson (24 Oct – 29 Oct, 1 x 24hr)",
    "Auckland → Christchurch (24 Oct – 26 Oct, 5 nights)",
@@ -271,7 +265,14 @@
    "Christchurch → Auckland (28 Nov – 12 Dec, 4 + 14 days)",
    "Queenstown → Auckland (9 Dec – 15 Dec, 6 + 3 x 24hrs)",
    "Christchurch → Queenstown (1 Dec – 8 Dec, 3 + 3 x 24hrs)",
-   "Wellington → Auckland (29 Nov – 3 Dec, 3 + 3 x 24hrs)"
+   "Wellington → Auckland (29 Nov – 3 Dec, 3 + 3 x 24hrs)",
+   "Christchurch → Auckland (19 Nov – 6 Dec, 3 + 4 nights)",
+   "Christchurch → Auckland (3 Dec – 7 Dec, 6 days)",
+   "Christchurch → Auckland (20 Nov – 24 Nov, 5 + 2 days)",
+   "Christchurch → Auckland (26 Nov – 29 Nov, 4 + 2 days)",
+   "Hamilton → Auckland (19 Nov – 19 Dec, 2 x 24hrs)",
+   "Wellington → Auckland (19 Nov – 26 Nov, 3 x 24hrs)",
+   "Queenstown → Auckland (22 Nov – 11 Dec, 6 x 24hrs)"
   ],
   "Apex deals": [
    "NEW ZEALAND CAR RENTAL DEALS AND RELOCATION RENTALS",
@@ -290,7 +291,8 @@
    "Drop Off: Auckland, Wellington",
    "Drop Off: Christchurch, Queenstown",
    "40% OFF THE DAILY RATE",
-   "Drop Off: Christchurch, Picton, Queenstown, Auckland, Wellington, Greymouth, Nelson, Napier, Tauranga"
+   "Drop Off: Christchurch, Picton, Queenstown, Auckland, Wellington, Greymouth, Nelson, Napier, Tauranga",
+   "Drop Off: Christchurch, Queenstown, Wellington"
   ]
  },
  "lows": {
